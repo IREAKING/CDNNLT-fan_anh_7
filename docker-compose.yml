@@ -1,0 +1,40 @@
+version: '3.9'
+services:
+  mysql:
+    build: ./mysql/
+    ports:
+      - "3306:3306"
+    restart: always
+    container_name: mysql
+    networks:
+      - anhhettienroi
+  crawl:
+    build: ./crawl
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mysql
+    container_name: crawl
+    networks:
+      - anhhettienroi
+  api:
+    build: ./api
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mysql
+      - crawl
+    container_name: fastapi
+    networks:
+      - anhhettienroi
+    
+  web:
+    build: ./web
+    ports:
+      - "80:80"
+    container_name: web
+    networks:
+      - anhhettienroi
+networks:
+  anhhettienroi:
+    driver: bridge
